@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pl">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Strefy - Identyfikator Miejsca</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background: #f3f3f3;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				margin: 0;
+				padding: 20px;
+			}
+
+			h1 {
+				color: #333;
+			}
+
+			input,
+			button {
+				font-size: 18px;
+				padding: 10px;
+				margin: 10px 0;
+				width: 100%;
+				max-width: 300px;
+				box-sizing: border-box;
+			}
+
+			button {
+				background-color: black;
+				color: white;
+				border: none;
+				cursor: pointer;
+				transition: background 0.3s;
+			}
+
+			button:hover {
+				background-color: #333;
+			}
+
+			.result {
+				font-size: 20px;
+				margin-top: 20px;
+				color: #222;
+			}
+
+			.error {
+				color: red;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Wpisz numer (1–155) lub numer rejestracyjny</h1>
+		<input type="text" id="inputValue" placeholder="Numer lub rejestracja" />
+		<button onclick="checkNumber()">Sprawdź strefę</button>
+		<div class="result" id="result"></div>
+
+		<script>
+			function checkNumber() {
+				const input = document.getElementById('inputValue').value.trim()
+				const result = document.getElementById('result')
+
+				if (!input) {
+					result.innerHTML = '<span class="error">Wpisz numer lub rejestrację.</span>'
+					return
+				}
+
+				fetch(`http://localhost:8000/check?input=${encodeURIComponent(input)}`)
+					.then(response => {
+						if (!response.ok) throw new Error('Nie znaleziono wpisu.')
+						return response.json()
+					})
+					.then(data => {
+						result.innerHTML = `
+        Numer: <strong>${data.number ?? 'brak'}</strong><br>
+        Rejestracja: <strong>${data.car_id}</strong><br>
+        Strefa: <strong>${data.zone || 'brak'}</strong><br>
+        Numer w strefie: <strong>${data.zone_number ?? 'brak'}</strong>
+      `
+					})
+					.catch(error => {
+						result.innerHTML = `<span class="error">${error.message}</span>`
+					})
+			}
+		</script>
+	</body>
+</html>

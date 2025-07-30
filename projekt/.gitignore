@@ -1,0 +1,8 @@
+git init
+echo "__pycache__/" >> .gitignore
+echo "*.pyc" >> .gitignore
+echo "cars.db" >> .gitignore
+echo "postgres_data/" >> .gitignore
+echo ".env" >> .gitignore
+git add .
+git commit -m "Initial commit: full working app"

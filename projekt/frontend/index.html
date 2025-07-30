@@ -70,7 +70,7 @@
 					return
 				}
 
-				fetch(`http://localhost:8000/check?input=${encodeURIComponent(input)}`)
+				fetch(`http://56.228.42.24:8000/check?input=${encodeURIComponent(input)}`)
 					.then(response => {
 						if (!response.ok) throw new Error('Nie znaleziono wpisu.')
 						return response.json()
